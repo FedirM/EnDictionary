@@ -14,28 +14,6 @@ typedef struct{
 void searchClick(GtkButton *btn, gpointer data){
     EditSet *set = (EditSet*)data;
     const gchar *in = gtk_entry_get_text( GTK_ENTRY(set->entry));
-/*    custom query (test check)
-    MYSQL_RES *result = query(con, "SELECT * FROM en_form LIMIT 10;");
-    if(result != NULL){
-        int num_fields = mysql_num_fields(result);
-        g_message("Fields num: %d", num_fields);
-        MYSQL_ROW row;
-        GtkTextIter end;
-        while ((row = mysql_fetch_row(result))) 
-        { 
-            for(int i = 0; i < num_fields; i++) 
-            {
-                g_message("STR: %s", row[i]);
-                gtk_text_buffer_get_end_iter(set->buff, &end);
-                gtk_text_buffer_insert(set->buff, &end, row[i], -1);
-            }
-        }    
-        mysql_free_result(result);
-    } else {
-        g_message(" RESULTS eq NULL ");
-    }
-*/
-
    
     if(in != NULL){
         char *str = g_strchomp(in);
@@ -68,13 +46,6 @@ void searchClick(GtkButton *btn, gpointer data){
             if(result != NULL){
                 int num_fields = mysql_num_fields(result);
                 MYSQL_ROW row = mysql_fetch_row(result);
-                
-                /* CLEAR BUFF
-                gtk_text_buffer_get_end_iter(set->buff, &end);
-                gtk_text_buffer_get_start_iter(set->buff, &start);
-                
-                gtk_text_buffer_delete(set->buff, &start, &end);
-                */
                 
                 gchar *status, *txt;
                 asprintf(&status, "Base word: %s \t\t Part of speech: %s", row[0], row[1]);
@@ -152,7 +123,7 @@ int main(int argc, char** argv){
     gtk_text_view_set_right_margin( GTK_TEXT_VIEW(view), 20 );
     gtk_text_view_set_top_margin( GTK_TEXT_VIEW(view), 10 );
     buff = gtk_text_view_get_buffer( GTK_TEXT_VIEW(view) );
-    gtk_text_buffer_set_text (buff, "Hello, this is some text", -1);
+    gtk_text_buffer_set_text (buff, "", -1);
     gtk_container_add( GTK_CONTAINER(scrollWin), view );
     
     provider = gtk_css_provider_new ();

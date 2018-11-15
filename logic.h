@@ -10,8 +10,7 @@ const gchar* getVersion(void){
 void finish_with_error(MYSQL *con)
 {
   fprintf(stderr, "%s\n", mysql_error(con));
-  mysql_close(con);
-  //exit(1);        
+  mysql_close(con);     
 }
 
 MYSQL* create_connect(gchar* host, gchar* user, gchar* pass, gchar* def_db){
@@ -55,15 +54,14 @@ MYSQL_RES* query(MYSQL *con, gchar* query){
 
 
 MYSQL_RES * get_word_info(MYSQL *con, gchar *word){
-//     g_message("WORD: %s", word);
     MYSQL_RES *result;
     
     char* buffer;
-    char query[] = {"SELECT en_root, en_speech, mw_ru FROM multiw W JOIN en_root R ON W.mw_en=R.en_root JOIN en_root_form RF ON R.en_root_id=RF.en_root_id JOIN en_form F ON F.en_form_id=RF.en_form_id WHERE F.en_form ='%s'"};
+//     char query[] = {"SELECT en_root, en_speech, mw_ru FROM multiw W JOIN en_root R ON W.mw_en=R.en_root JOIN en_root_form RF ON R.en_root_id=RF.en_root_id JOIN en_form F ON F.en_form_id=RF.en_form_id WHERE F.en_form ='%s'"};
+//     
+    char query[] = { "SELECT en_root, en_speech, mw_ru FROM en_root R, multiw W, en_root_form RF, en_form F WHERE W.mw_en=R.en_root AND R.en_root_id=RF.en_root_id AND RF.en_form_id=F.en_form_id AND F.en_form='%s'" };
     
-    g_message("Query: %s", query);
     asprintf(&buffer, query, word);
-    g_message("Buffer: %s", buffer);
     
     if (mysql_query(con, buffer)) 
     {
